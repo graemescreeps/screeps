@@ -1,0 +1,38 @@
+{
+  "name": "screeps",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://graemescreeps@github.com/graemescreeps/screeps.git"
+  },
+  "author": "Graeme Christie",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/graemescreeps/screeps/issues"
+  },
+  "dependencies": {
+    "core-js": "^2.4.1"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^3.2.2",
+    "clean-webpack-plugin": "^0.1.16",
+    "gulp-clean": "^0.3.2",
+    "gulp-flatten": "^0.3.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.6.1",
+    "gulp-rsync": "0.0.8",
+    "gulp-tap": "^1.0.1",
+    "gulp-typescript": "^3.2.1",
+    "gulp-util": "^3.0.8",
+    "path": "^0.12.7",
+    "small": "^0.2.9",
+    "ts-node": "^3.3.0",
+    "webpack": "^3.4.1",
+    "webpack-chain": "^3.3.0"
+  }
+}
