@@ -26,10 +26,12 @@ gulp.task("compile", ["shims"], function () {
             var segments = localPath == "" ? [] : localPath.split("/");
 
             file.contents = Buffer.from(file.contents.toString().replace(/(require\s*\(\s*["']\s*)(\.\/|\.\.\/)*([^'"]+)(\s*["'][^)]*\))/g, function(match, p1, p2, p3, p4, offset, all) {
-                let upDirLevels = (p2.match(/\.\.\//g) || []).length;
-                if (upDirLevels) {
-                    segments = segments.splice(-1 * upDirLevels, upDirLevels)
-                } 
+                if (p2) {
+                    let upDirLevels = (p2.match(/\.\.\//g) || []).length;
+                    if (upDirLevels) {
+                        segments = segments.splice(-1 * upDirLevels, upDirLevels)
+                    }
+                }
                 return p1 + "./" + segments.join("_")  + p3.replace(/([^/])\//g,"$1_") + p4;
 
             }));
@@ -80,7 +82,8 @@ function sync(destructive)
       shell : "rsh",
       recursive: destructive,
       clean: destructive,
-      destination: "/Users/graemec/Library/Application Support/Screeps/scripts/screeps.com/default/",
+      destination: "/Users/graemec/Library/Application Support/Screeps/scripts/13_76_143_93___21025/default",
+      destinationmain: "/Users/graemec/Library/Application Support/Screeps/scripts/screeps.com/default/",
       destination1: "/Users/graemec/Library/Application\ Support/Screeps/scripts/127_0_0_1___21025/default/"
     })
 }

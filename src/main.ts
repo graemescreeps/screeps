@@ -1,6 +1,6 @@
 import * as gameManager from "./gameManager"
 import * as uiManager from "./uiManager"
-import * as creepManager from "./creepManager"
+import * as CreepStrategyFactory from "./creepStrategies/CreepStrategyFactory"
 
 import "./shims"
 
@@ -9,8 +9,13 @@ export function loop() {
     if (Game.time % 10 === 0) {
         gameManager.run();
     }
-
-    
     uiManager.run();
-    creepManager.run();
+
+    for(var name in Game.creeps) {
+        var creepStrategy = CreepStrategyFactory.Create(Game.creeps[name]);  
+
+        if (creepStrategy) {
+            creepStrategy.run();
+        } 
+    }
 }
