@@ -12,16 +12,21 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
 
     abstract run() : void;
 
-    protected findDroppedEnergyBehaviour() : Boolean {
-        let energy = this.creep.pos.findInRange(FIND_DROPPED_RESOURCES, 20, {
-            filter : (r : Resource) => r.resourceType === RESOURCE_ENERGY
-        }) as Array<Resource>;
+    protected moveToOpts : MoveToOpts = {
+         visualizePathStyle: {stroke: '#ffffff'},
+         reusePath : 1
+    };
 
-        if (!energy.length)
+    protected findDroppedEnergyBehaviour() : Boolean {
+        let energy = this.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+            filter : (r : Resource) => r.resourceType === RESOURCE_ENERGY
+        }) as Resource;
+
+        if (!energy)
             return false;
 
-        if(this.creep.pickup(energy[0]) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(energy[0], {visualizePathStyle: {stroke: '#ffffff'}});
+        if(this.creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+            this.creep.moveTo(energy, this.moveToOpts);
         }
 
         return true;
@@ -37,7 +42,7 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
             return false;
 
         if (this.creep.withdraw(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(container)
+            this.creep.moveTo(container, this.moveToOpts)
         }
 
         return true;
@@ -55,7 +60,7 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
                 }) as Array<Structure>;
 
         if (this.creep.transfer(targets[0], RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+                this.creep.moveTo(targets[0], this.moveToOpts);
         }
 
         return true;

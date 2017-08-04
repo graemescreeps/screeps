@@ -15,11 +15,11 @@ export default class CourierStrategy  extends CreepStrategyBase {
         }
 
         this.courierBehaviour()
-            || this.findDroppedEnergyBehaviour() 
+            || this.findDroppedEnergyBehaviour()         
             || this.findContainerEnergyBehaviour();
+            
     } 
 
-        
     protected courierBehaviour() : Boolean {
         if (!this.creep.memory.delivering)
             return false;

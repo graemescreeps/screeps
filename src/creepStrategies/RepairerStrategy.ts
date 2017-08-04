@@ -6,32 +6,52 @@ export default class RepairerStrategy  extends CreepStrategyBase {
     public run() : void {
         if(this.creep.memory.repairing && this.creep.carry.energy == 0) {
             this.creep.memory.repairing = false;
-            this.creep.say('🔄 refill');
-        }
-        if(!this.creep.memory.repairing && this.creep.carry.energy == this.creep.carryCapacity) {
-            this.creep.memory.repairing = true;
-            this.creep.say('🛠 repair');
+            this.creep.say('🔄 ⚡');
         }
 
-        this.repairBehaviour()
+        if(!this.creep.memory.repairing && this.creep.carry.energy == this.creep.carryCapacity) {
+            this.creep.memory.repairing = true;
+        }
+
+        this.repairSelectedTargetBehaviour()
+            || this.repairNewTargetBehaviour
             || this.findDroppedEnergyBehaviour() 
             || this.findContainerEnergyBehaviour();
     } 
         
-    protected repairBehaviour() : Boolean {
+    protected repairSelectedTargetBehaviour() : Boolean {
+        if (!this.creep.memory.targetId)
+            return false;
+
+        let target = Game.getObjectById(this.creep.memory.targetId) as Structure;
+
+        if (!target || target.hits == target.hitsMax) {
+            this.creep.memory.targetId = undefined;
+            return false;
+        }
+        if (this.creep.repair(target) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(target, this.moveToOpts);
+        } 
+
+        return true;
+    }
+
+    protected repairNewTargetBehaviour() : Boolean {
         if (!this.creep.memory.repairing)
             return false;
 
-        var targets = this.creep.pos.findClosestByPath(FIND_MY_STRUCTURES,  
-                { filter : (s : Structure) => s.hits < s.hitsMax / 2 }) as Array<Structure>
+        var target = this.creep.pos.findClosestByPath(FIND_STRUCTURES,  
+                { filter : (s : Structure) => s.hits < s.hitsMax / 2 }) as Structure
 
-        
-        if(!targets || !targets.length)
+        if(!target)
             return false;
 
-        if (this.creep.repair(targets[0]) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ff00ff'}});
-        }
+        this.creep.memory.targetId = target.id;
+        this.creep.say(`🛠 ${target.structureType}`);
+
+        if (this.creep.repair(target) == ERR_NOT_IN_RANGE) {
+                this.creep.moveTo(target, this.moveToOpts);
+        } 
 
         return true;
     }

@@ -34,7 +34,7 @@ export default class BuilderStrategy extends CreepStrategyBase {
             return false;
         }
         if(this.creep.build(target) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(target, {visualizePathStyle: {stroke: '#ffffff'}});
+            this.creep.moveTo(target, this.moveToOpts);
         }
 
         return true;
@@ -70,7 +70,7 @@ export default class BuilderStrategy extends CreepStrategyBase {
         this.creep.memory.targetId = targets[0].id;
         this.say(`🚧 ${targets[0].structureType}`)
         if(this.creep.build(targets[0]) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(targets[0], {visualizePathStyle: {stroke: '#ffffff'}});
+            this.creep.moveTo(targets[0], this.moveToOpts);
         }
 
         return true;

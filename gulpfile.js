@@ -9,6 +9,9 @@ var rsync = require('gulp-rsync');
  
 var tsProject = ts.createProject('tsconfig.json',  { emitReferencedFiles: true });
 
+var devDestination = "/Users/graemec/Library/Application Support/Screeps/scripts/13_76_143_93___21025/default";
+var prodDestination = "/Users/graemec/Library/Application Support/Screeps/scripts/screeps.com/default/";
+
 gulp.task("default", ["clean", "shims", "markdown", "compile" ] );
 
 gulp.task("clean", function () {
@@ -60,12 +63,21 @@ gulp.task("markdown", () => {
 
 gulp.task("deploy", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(true));
+    .pipe(sync(prodDestination, true));
 });
 
+gulp.task("deploydev", ["compile", "markdown" ] , function() {
+  return gulp.src('dist/**/*.*')
+    .pipe(sync(devDestination, true));
+});
 gulp.task("redeploy", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(false));
+    .pipe(sync(prodDestination,false));
+});
+
+gulp.task("redeploydev", ["compile", "markdown" ] , function() {
+  return gulp.src('dist/**/*.*')
+    .pipe(sync(devDestination,false));
 });
 
 gulp.task('watch', ['clean', 'deploy'], function() {
@@ -73,8 +85,13 @@ gulp.task('watch', ['clean', 'deploy'], function() {
     gulp.watch('src/**/*.md', ['redeploy']);
 });
 
+gulp.task('watchdev', ['clean', 'deploydev'], function() {
+    gulp.watch('src/**/*.ts', ['redeploydev']);
+    gulp.watch('src/**/*.md', ['redeploydev']);
+});
 
-function sync(destructive) 
+
+function sync(dest, destructive) 
 {
     return rsync({
       root: 'dist/',
@@ -82,9 +99,7 @@ function sync(destructive)
       shell : "rsh",
       recursive: destructive,
       clean: destructive,
-      destination: "/Users/graemec/Library/Application Support/Screeps/scripts/13_76_143_93___21025/default",
-      destinationmain: "/Users/graemec/Library/Application Support/Screeps/scripts/screeps.com/default/",
-      destination1: "/Users/graemec/Library/Application\ Support/Screeps/scripts/127_0_0_1___21025/default/"
+      destination: dest,
     })
 }
 

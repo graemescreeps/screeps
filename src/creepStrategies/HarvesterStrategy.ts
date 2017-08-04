@@ -33,7 +33,7 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
             return false;
         }
         if(this.creep.harvest(source) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(source, {visualizePathStyle: {stroke: '#ffaa00'}});     
+            this.creep.moveTo(source, this.moveToOpts);     
         }
 
         return true;
@@ -59,7 +59,7 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
         this.creep.memory.targetSourceId = selectedSource.id;
 
         if(this.creep.harvest(selectedSource) == ERR_NOT_IN_RANGE) {
-            this.creep.moveTo(selectedSource, {visualizePathStyle: {stroke: '#ffaa00'}});     
+            this.creep.moveTo(selectedSource, this.moveToOpts);     
         }
 
         return true;
@@ -87,7 +87,7 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
             return false;
         
         if(this.creep.transfer(container, RESOURCE_ENERGY) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(container)
+                this.creep.moveTo(container, this.moveToOpts)
         }
         
 
