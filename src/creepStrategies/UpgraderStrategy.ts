@@ -15,8 +15,7 @@ export default class UpgraderStrategy  extends CreepStrategyBase {
         }
 
         this.upgradeBehavior() 
-            || this.findContainerEnergyBehaviour() 
-            || this.findDroppedEnergyBehaviour();
+            || this.refillEnergyBehaviour();
         
     } 
     

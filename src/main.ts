@@ -6,7 +6,7 @@ import "./shims"
 
 export function loop() {
 
-    if (Game.time % 10 === 0) {
+    if (Game.time % 3 === 0) {
         gameManager.run();
     }
     uiManager.run();

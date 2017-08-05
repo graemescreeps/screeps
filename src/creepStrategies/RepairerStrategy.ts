@@ -15,12 +15,11 @@ export default class RepairerStrategy  extends CreepStrategyBase {
 
         this.repairSelectedTargetBehaviour()
             || this.repairNewTargetBehaviour
-            || this.findDroppedEnergyBehaviour() 
-            || this.findContainerEnergyBehaviour();
+            || this.refillEnergyBehaviour();
     } 
         
     protected repairSelectedTargetBehaviour() : Boolean {
-        if (!this.creep.memory.targetId)
+        if (this.creep.memory.repairing || !this.creep.memory.targetId)
             return false;
 
         let target = Game.getObjectById(this.creep.memory.targetId) as Structure;

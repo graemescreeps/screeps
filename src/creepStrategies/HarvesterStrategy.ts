@@ -4,14 +4,19 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
     public static canApplyStrategy(creep : Creep) : Boolean { return creep.memory.role ===  "harvester"; }
 
     public run() : void {
-        if(this.creep.memory.harvesting && this.creep.carry.energy == this.creep.carryCapacity) {
-            this.creep.memory.harvesting = false;
-        }
+        if (this.creep.carryCapacity == 0) {
+             this.creep.memory.harvesting = true;
+        } else {
+            if(this.creep.memory.harvesting && this.creep.carry.energy == this.creep.carryCapacity) {
+                this.creep.memory.harvesting = false;
+            }
 
-        if(!this.creep.memory.harvesting && this.creep.carry.energy == 0) {
-            this.creep.memory.harvesting = true;
-            this.say('⛏️⚡');
+            if(!this.creep.memory.harvesting && this.creep.carry.energy == 0) {
+                this.creep.memory.harvesting = true;
+                this.say('⛏️⚡');
+            }
         }
+        
         this.harvestFromSelectedSourceBehaviour() 
             || this.harvestFromNewSourceBehaviour()
             || this.noCourierBehavior() 
@@ -20,7 +25,7 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
     } 
     
     protected harvestFromSelectedSourceBehaviour() : Boolean {
-        if(this.creep.carry.energy >= this.creep.carryCapacity) 
+        if(this.creep.carryCapacity > 0 && this.creep.carry.energy == this.creep.carryCapacity) 
             return false;
 
         if (!this.creep.memory.targetSourceId)
@@ -41,7 +46,7 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
 
 
     protected harvestFromNewSourceBehaviour() : Boolean {
-        if(this.creep.carry.energy >= this.creep.carryCapacity) 
+        if(this.creep.carryCapacity > 0 && this.creep.carry.energy >= this.creep.carryCapacity) 
                return false;
         
         let lastCreepCount=9999;
@@ -71,13 +76,22 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
         if (courierCount > 0)
             return false;
 
-        this.log(`No couriers - delivering load to structure directly ....`);
+        if (this.creep.carryCapacity == 0) {
+            this.log(`*** No couriers and harvester has no carry capacity ****`);
+            return false;
+        } else {
+
+            this.log(`No couriers - delivering load to structure directly ....`);
        
-        return this.deliverEnergyToStructureBehaviour();
+            return this.deliverEnergyToStructureBehaviour();
+        }
 
     }
 
     protected deliverToContainerBehaviour() : Boolean {
+        if (this.creep.carryCapacity == 0)
+            return false;
+
         let container = this.creep.pos.findClosestByPath(FIND_STRUCTURES, {
                         filter: (s : Structure) => s.structureType == STRUCTURE_CONTAINER
                                     && (s as Container).store[RESOURCE_ENERGY] < (s as Container).storeCapacity
@@ -95,6 +109,9 @@ export default class HarvesterStrategy  extends CreepStrategyBase {
     }
 
     protected dropBehaviour() : Boolean {
+        if (this.creep.carryCapacity == 0)
+            return false;
+
         this.say(`⬇️ ⚡`);
         this.creep.drop(RESOURCE_ENERGY, this.creep.carryCapacity);
 

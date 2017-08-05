@@ -11,13 +11,11 @@ export default class BuilderStrategy extends CreepStrategyBase {
 
         if(!this.creep.memory.building && this.creep.carry.energy == this.creep.carryCapacity) {
             this.creep.memory.building = true;
-            //this.say('🚧 build');
         }
 
         this.buildCurrentTargetBehavior() 
             || this.buildNewTargetBehavior() 
-            || this.findContainerEnergyBehaviour() 
-            || this.findDroppedEnergyBehaviour()
+            || this.refillEnergyBehaviour();
         
     } 
     
@@ -29,7 +27,7 @@ export default class BuilderStrategy extends CreepStrategyBase {
 
         let target = Game.getObjectById(this.creep.memory.targetId) as ConstructionSite;
         if (!target) {
-            this.say(`Deleted target`)
+            this.say(`Deleted 🚧 target`)
             delete this.creep.memory.targetId;
             return false;
         }
@@ -57,6 +55,10 @@ export default class BuilderStrategy extends CreepStrategyBase {
                 : a.structureType === STRUCTURE_EXTENSION && b.structureType === STRUCTURE_EXTENSION && b.progress > a.progress  ? 1
                 : a.structureType === STRUCTURE_EXTENSION && b.structureType !== STRUCTURE_EXTENSION  ? -1
                 : a.structureType !== STRUCTURE_EXTENSION && b.structureType === STRUCTURE_EXTENSION  ? 1
+                : a.structureType === STRUCTURE_TOWER && b.structureType === STRUCTURE_TOWER && a.progress > b.progress  ? -1
+                : a.structureType === STRUCTURE_TOWER && b.structureType === STRUCTURE_TOWER && b.progress > a.progress  ? 1
+                : a.structureType === STRUCTURE_TOWER && b.structureType !== STRUCTURE_TOWER  ? -1
+                : a.structureType !== STRUCTURE_TOWER && b.structureType === STRUCTURE_TOWER  ? 1
                 : a.structureType === STRUCTURE_CONTAINER && b.structureType === STRUCTURE_CONTAINER && a.progress > b.progress  ? -1
                 : a.structureType === STRUCTURE_CONTAINER && b.structureType === STRUCTURE_CONTAINER && b.progress > a.progress  ? 1
                 : a.structureType === STRUCTURE_CONTAINER && b.structureType !== STRUCTURE_CONTAINER  ? -1
