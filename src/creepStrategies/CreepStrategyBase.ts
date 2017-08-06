@@ -13,8 +13,7 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
     abstract run() : void;
 
     protected moveToOpts : MoveToOpts = {
-         visualizePathStyle: {stroke: '#ffffff'},
-         reusePath : 1
+         visualizePathStyle: {stroke: '#ffffff'}
     };
 
     protected getEnergyFromCurrentTargetBehaviour() {
@@ -110,16 +109,23 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
     protected refillEnergyBehaviour() : Boolean {
         let targets = this.creep.room.find(FIND_MY_STRUCTURES, {
                 filter: (structure : Structure)  => {
-                    return (structure.structureType == STRUCTURE_EXTENSION &&  (structure as StructureExtension).energy > this.creep.carryCapacity ||
-                        (structure.structureType == STRUCTURE_SPAWN && (structure as StructureSpawn).energy > this.creep.carryCapacity ||
-                        (structure.structureType == STRUCTURE_TOWER && (structure as StructureTower).energy > this.creep.carryCapacity ||
-                        (structure.structureType == STRUCTURE_CONTAINER) && (structure as StructureContainer).store[RESOURCE_ENERGY] > this.creep.carryCapacity)));
+                    return (structure.structureType == STRUCTURE_EXTENSION &&  (structure as StructureExtension).energy > 0  ||
+                        (structure.structureType == STRUCTURE_SPAWN && (structure as StructureSpawn).energy >  0 ||
+                        (structure.structureType == STRUCTURE_TOWER && (structure as StructureTower).energy >  0 ||
+                        (structure.structureType == STRUCTURE_CONTAINER) && (structure as StructureContainer).store[RESOURCE_ENERGY] > 0)));
                 }
             }) as Array<Structure>;
 
+        
+        if (!targets || targets.length == 0) {
+            return false;
+        }
+
         if (targets.length > 1) {
-            targets.sort((a,b) => 
-                this.creep.pos.getRangeTo(a) < this.creep.pos.getRangeTo(b) ? -1
+            targets.sort((a , b) =>
+                (<any>a).energy >= this.creep.carryCapacity && (<any>b).energy < this.creep.carryCapacity ? -1
+                : (<any>a).energy < this.creep.carryCapacity && (<any>b).energy >= this.creep.carryCapacity ? 1
+                : this.creep.pos.getRangeTo(a) < this.creep.pos.getRangeTo(b) ? -1
                 : this.creep.pos.getRangeTo(a) > this.creep.pos.getRangeTo(b) ? 1
                 : 0         
             );
@@ -158,6 +164,10 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
     protected say(message : string) : void {
         this.creep.say(message);
         console.log(`${this.creep.name} says: ${message}`);
+    }
+
+    protected getRemainingCreepCapacity(c : Creep) {
+        return (c.carryCapacity - Object.values(c.carry).reduce((sum : number, v : number ) => sum += v, 0));
     }
 }
 

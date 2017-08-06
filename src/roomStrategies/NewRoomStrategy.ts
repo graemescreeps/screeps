@@ -18,18 +18,18 @@ export default class BuilderStrategy extends RoomStrategyBase {
         ],
         "builder" : [      
             [ WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE ], // 550
-            [ WORK, WORK, CARRY, MOVE, MOVE ], // 350
-            [ WORK, CARRY, MOVE ], // 250
+            [ WORK, WORK, CARRY, MOVE, MOVE, MOVE ], // 400
+            [ WORK, CARRY, MOVE, MOVE ], // 300
         ],
         "repairer" : [      
             [ WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE ], // 550
-            [ WORK, WORK, CARRY, MOVE, MOVE ], // 350
-            [ WORK, CARRY, MOVE ], // 250
+            [ WORK, WORK, CARRY, MOVE, MOVE, MOVE ], // 350
+            [ WORK, CARRY, MOVE, MOVE ], // 250
         ],
         "upgrader" : [      
             [ WORK, WORK, WORK, CARRY, MOVE, MOVE, MOVE, MOVE ], // 550
-            [ WORK, WORK, CARRY, MOVE, MOVE ], // 350
-            [ WORK, CARRY, MOVE ], // 250
+            [ WORK, WORK, CARRY, MOVE, MOVE, MOVE ], // 400
+            [ WORK, CARRY, MOVE, MOVE ], // 300
         ],
     }
 
@@ -56,7 +56,7 @@ export default class BuilderStrategy extends RoomStrategyBase {
             this.trySpawnCreepFromBuildList(this.spawn, "harvester", this.builds["harvester"]);
         } else if (this.creepCount("courier") < 4) {
             this.trySpawnCreepFromBuildList(this.spawn, "courier", this.builds["courier"]);
-        } else if (this.creepCount("builder") < 4 && this.creepCount("builder") < this.creepCount("upgrader") && this.constructionSites.length > 0) {
+        } else if ((this.creepCount("builder") < 4 || this.creepCount("builder") < this.constructionSites.length/10) && this.creepCount("builder") < this.creepCount("upgrader") && this.constructionSites.length > 0) {
             this.trySpawnCreepFromBuildList(this.spawn, "builder", this.builds["builder"]);
         } else if (this.creepCount("repairer") < 4 && this.creepCount("builder") < this.creepCount("upgrader") && this.creepCount("repairer") < this.repairTargets.length/2) {
             this.trySpawnCreepFromBuildList(this.spawn, "repairer", this.builds["repairer"]);

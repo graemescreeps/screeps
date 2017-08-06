@@ -70,7 +70,7 @@ export abstract class RoomStrategyBase implements IRoomStrategy {
         let name = `${role}-${nameIndex}`
 
         spawn.createCreep(build, name, {role: role} );
-        console.log(`Spawning new $role (${build}): ${name}`);
+        console.log(`Spawning new ${role} (${build}): ${name}`);
 
         return true;
 

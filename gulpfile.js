@@ -72,12 +72,12 @@ gulp.task("deploydev", ["compile", "markdown" ] , function() {
 });
 gulp.task("redeploy", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(prodDestination,false));
+    .pipe(sync(prodDestination,true));
 });
 
 gulp.task("redeploydev", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(devDestination,false));
+    .pipe(sync(devDestination,true));
 });
 
 gulp.task('watch', ['clean', 'deploy'], function() {
