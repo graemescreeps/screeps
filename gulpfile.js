@@ -63,21 +63,21 @@ gulp.task("markdown", () => {
 
 gulp.task("deploy", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(prodDestination, true));
+    .pipe(sync(prodDestination, false));
 });
 
 gulp.task("deploydev", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(devDestination, true));
+    .pipe(sync(devDestination, false));
 });
 gulp.task("redeploy", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(prodDestination,true));
+    .pipe(sync(prodDestination, false));
 });
 
 gulp.task("redeploydev", ["compile", "markdown" ] , function() {
   return gulp.src('dist/**/*.*')
-    .pipe(sync(devDestination,true));
+    .pipe(sync(devDestination,false));
 });
 
 gulp.task('watch', ['clean', 'deploy'], function() {

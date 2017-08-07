@@ -59,10 +59,18 @@ export default class BuilderStrategy extends CreepStrategyBase {
                 : a.structureType === STRUCTURE_TOWER && b.structureType === STRUCTURE_TOWER && b.progress > a.progress  ? 1
                 : a.structureType === STRUCTURE_TOWER && b.structureType !== STRUCTURE_TOWER  ? -1
                 : a.structureType !== STRUCTURE_TOWER && b.structureType === STRUCTURE_TOWER  ? 1
+                : a.structureType === STRUCTURE_STORAGE && b.structureType === STRUCTURE_STORAGE && a.progress > b.progress  ? -1
+                : a.structureType === STRUCTURE_STORAGE && b.structureType === STRUCTURE_STORAGE && b.progress > a.progress  ? 1
+                : a.structureType === STRUCTURE_STORAGE && b.structureType !== STRUCTURE_STORAGE  ? -1
+                : a.structureType !== STRUCTURE_STORAGE && b.structureType === STRUCTURE_STORAGE  ? 1
                 : a.structureType === STRUCTURE_CONTAINER && b.structureType === STRUCTURE_CONTAINER && a.progress > b.progress  ? -1
                 : a.structureType === STRUCTURE_CONTAINER && b.structureType === STRUCTURE_CONTAINER && b.progress > a.progress  ? 1
                 : a.structureType === STRUCTURE_CONTAINER && b.structureType !== STRUCTURE_CONTAINER  ? -1
-                : a.structureType !== STRUCTURE_CONTAINER && b.structureType === STRUCTURE_CONTAINER  ? 1     
+                : a.structureType !== STRUCTURE_CONTAINER && b.structureType === STRUCTURE_CONTAINER  ? 1    
+                : a.structureType === STRUCTURE_RAMPART && b.structureType === STRUCTURE_RAMPART && a.progress > b.progress  ? -1
+                : a.structureType === STRUCTURE_RAMPART && b.structureType === STRUCTURE_RAMPART && b.progress > a.progress  ? 1
+                : a.structureType === STRUCTURE_RAMPART && b.structureType !== STRUCTURE_RAMPART  ? -1
+                : a.structureType !== STRUCTURE_RAMPART && b.structureType === STRUCTURE_RAMPART  ? 1      
                 : this.creep.pos.getRangeTo(a) < this.creep.pos.getRangeTo(b) ? -1
                 : this.creep.pos.getRangeTo(a) > this.creep.pos.getRangeTo(b) ? 1
                 : 0         

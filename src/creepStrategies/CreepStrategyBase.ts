@@ -109,8 +109,9 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
     protected refillEnergyBehaviour() : Boolean {
         let targets = this.creep.room.find(FIND_MY_STRUCTURES, {
                 filter: (structure : Structure)  => {
-                    return (structure.structureType == STRUCTURE_EXTENSION &&  (structure as StructureExtension).energy > 0  ||
-                        (structure.structureType == STRUCTURE_SPAWN && (structure as StructureSpawn).energy >  0 
+                    return (structure.structureType == STRUCTURE_EXTENSION && this.creep.room.energyAvailable > 250 
+                            && (structure as StructureExtension).energy > 0  ||
+                        (structure.structureType == STRUCTURE_SPAWN && this.creep.room.energyAvailable > 250
                             && structure.pos.findInRange(FIND_CREEPS, 1).length < 8 ||
                         (structure.structureType == STRUCTURE_TOWER && (structure as StructureTower).energy >  0 ||
                         (structure.structureType == STRUCTURE_CONTAINER) && (structure as StructureContainer).store[RESOURCE_ENERGY] > 0)));

@@ -14,7 +14,7 @@ export default class RepairerStrategy  extends CreepStrategyBase {
         }
 
         this.repairSelectedTargetBehaviour()
-            || this.repairNewTargetBehaviour
+            || this.repairNewTargetBehaviour()
             || this.refillEnergyBehaviour();
     } 
         
@@ -25,11 +25,13 @@ export default class RepairerStrategy  extends CreepStrategyBase {
         let target = Game.getObjectById(this.creep.memory.targetId) as Structure;
 
         if (!target || target.hits == target.hitsMax) {
+            this.log(`Lost target`)
             this.creep.memory.targetId = undefined;
             return false;
         }
+
         if (this.creep.repair(target) == ERR_NOT_IN_RANGE) {
-                this.creep.moveTo(target, this.moveToOpts);
+            this.creep.moveTo(target, this.moveToOpts);
         } 
 
         return true;
@@ -46,7 +48,7 @@ export default class RepairerStrategy  extends CreepStrategyBase {
             return false;
 
         this.creep.memory.targetId = target.id;
-        this.creep.say(`🛠 ${target.structureType}`);
+        this.say(`🛠 ${target.structureType}`);
 
         if (this.creep.repair(target) == ERR_NOT_IN_RANGE) {
                 this.creep.moveTo(target, this.moveToOpts);
