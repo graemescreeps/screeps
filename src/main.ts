@@ -2,6 +2,7 @@ import * as uiManager from "./uiManager"
 import * as creepStrategyFactory from "./creepStrategies/CreepStrategyFactory"
 import * as roomStrategyFactory from "./roomStrategies/RoomStrategyFactory"
 import * as buildStrategyFactory from "./buildStrategies/BuildStrategyFactory"
+import * as towerStrategyFactory from "./towerStrategies/TowerStrategyFactory"
 import "./shims"
 
 export function loop() {
@@ -26,7 +27,7 @@ export function loop() {
 
     uiManager.run();
 
-    for(var name in Game.creeps) {
+    for(let name in Game.creeps) {
         if(!Game.creeps[name]) {
             delete Memory.creeps[name];
             console.log(`Clearing non-existing creep memory: ${name}`);
@@ -38,5 +39,12 @@ export function loop() {
         if (creepStrategy) {
             creepStrategy.run();
         } 
+    }
+
+    for (let tower of <StructureTower[]>Object.values(Game.structures).filter(s=>s.structureType == STRUCTURE_TOWER)) {
+        let towerStrategy = towerStrategyFactory.Create(tower);
+
+        if (towerStrategy)
+            towerStrategy.run();
     }
 }

@@ -113,8 +113,8 @@ export abstract class CreepStrategyBase implements ICreepStrategy {
                             && (structure as StructureExtension).energy > 0  ||
                         (structure.structureType == STRUCTURE_SPAWN && this.creep.room.energyAvailable > 250
                             && structure.pos.findInRange(FIND_CREEPS, 1).length < 8 ||
-                        (structure.structureType == STRUCTURE_TOWER && (structure as StructureTower).energy >  0 ||
-                        (structure.structureType == STRUCTURE_CONTAINER) && (structure as StructureContainer).store[RESOURCE_ENERGY] > 0)));
+                        (structure.structureType == STRUCTURE_STORAGE && (structure as StructureStorage).store.energy >  0 ||
+                        (structure.structureType == STRUCTURE_CONTAINER) && (structure as StructureContainer).store.energy > 0)));
                 }
             }) as Array<Structure>;
 

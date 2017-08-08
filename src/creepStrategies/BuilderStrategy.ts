@@ -44,10 +44,9 @@ export default class BuilderStrategy extends CreepStrategyBase {
 
         let targets = this.creep.room.find(FIND_MY_CONSTRUCTION_SITES) as Array<ConstructionSite>;
 
-        if(!targets.length) {
-            this.log(`No new construction sites`)
+        if(!targets.length) 
             return false;
-        }
+        
 
         if (targets.length > 1) {
             targets.sort((a,b) => 

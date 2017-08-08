@@ -47,7 +47,10 @@ export abstract class RoomStrategyBase implements IRoomStrategy {
     }
 
     get repairTargets() : Array<Structure> {
-        return this.stats.repairTargets || this.room.find(FIND_STRUCTURES,  { filter : (s : Structure) => s.hits < s.hitsMax / 1.5 }) as Array<Structure>;
+        return this.stats.repairTargets || this.room.find(FIND_STRUCTURES,  { filter : (s : Structure) => 
+            ((s.structureType == STRUCTURE_WALL || s.structureType == STRUCTURE_RAMPART) && s.hits < 100000)
+            || (!(s.structureType == STRUCTURE_WALL || s.structureType == STRUCTURE_RAMPART) && s.hits < s.hitsMax / 2)
+        }) as Array<Structure>;
     }
     
     get spawns() : Array<Spawn> {

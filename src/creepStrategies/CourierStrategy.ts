@@ -9,14 +9,14 @@ export default class CourierStrategy  extends CreepStrategyBase {
             this.creep.say('🔄 ⚡');
         }
 
-
         if(!this.creep.memory.delivering && this.getRemainingCreepCapacity(this.creep) === 0) {
             this.creep.memory.delivering = true;
             this.creep.say('📦 ⚡');
         }
 
         this.courierBehaviour()
-            || this.transferEnergyToAdjacentCreepBehaviour()
+            //|| this.transferEnergyToAdjacentCreepBehaviour()
+            || this.findLargeDepositsofDroppedEnergyBehaviour()
             || this.findDroppedEnergyBehaviour();     
     } 
 
@@ -35,7 +35,13 @@ export default class CourierStrategy  extends CreepStrategyBase {
 
         if (targets.length > 1) {
             targets.sort((a , b) =>
-                this.creep.pos.getRangeTo(a) < this.creep.pos.getRangeTo(b) ? -1
+                this.creep.room.energyAvailable <= 300 
+                    && (a.structureType == STRUCTURE_EXTENSION || a.structureType == STRUCTURE_SPAWN)
+                    && !(b.structureType !== STRUCTURE_EXTENSION || b.structureType == STRUCTURE_SPAWN) ? -1
+                : this.creep.room.energyAvailable > 300 
+                    && (a.structureType == STRUCTURE_TOWER || a.structureType == STRUCTURE_TOWER)
+                    && !(b.structureType !== STRUCTURE_TOWER || b.structureType == STRUCTURE_TOWER) ? -1
+                : this.creep.pos.getRangeTo(a) < this.creep.pos.getRangeTo(b) ? -1
                 : this.creep.pos.getRangeTo(a) > this.creep.pos.getRangeTo(b) ? 1
                 : 0         
             );
@@ -52,13 +58,29 @@ export default class CourierStrategy  extends CreepStrategyBase {
         return false;
     }
 
+    protected findLargeDepositsofDroppedEnergyBehaviour() : Boolean {
+        let energy = this.creep.pos.findClosestByPath(FIND_DROPPED_RESOURCES, {
+            filter : (r : Resource) => r.resourceType === RESOURCE_ENERGY
+                && r.amount > 500
+        }) as Resource;
+
+        if (!energy)
+            return false;
+
+        if(this.creep.pickup(energy) == ERR_NOT_IN_RANGE) {
+            this.creep.moveTo(energy, this.moveToOpts);
+        }
+
+        return true;
+    }
+
     protected transferEnergyToAdjacentCreepBehaviour()
     {
-        if (!this.creep.memory.delivering)
+        if (this.creep.memory.delivering)
             return false;
 
         let neigbours = this.creep.pos.findInRange(FIND_MY_CREEPS, 1, {
-            filter: (c : Creep) => c.memory.role !== "harvester" 
+            filter: (c : Creep) => c.memory.role === "courier" && !c.memory.delivering 
                 && this.getRemainingCreepCapacity(c) > 0
             }) as Creep[];
 
